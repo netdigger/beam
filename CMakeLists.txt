@@ -1,0 +1,5 @@
+cmake_minimum_required (VERSION 2.8)
+project (BEAM)
+aux_source_directory(./src DIR_SRCS)
+add_library(beam SHARED ${DIR_SRCS})
+INCLUDE_DIRECTORIES(./include)

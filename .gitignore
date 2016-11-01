@@ -27,3 +27,12 @@
 *.exe
 *.out
 *.app
+
+# target lib
+libbeam.so
+
+# directory
+build
+
+# temporary file
+*.swp
