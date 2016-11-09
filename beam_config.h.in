@@ -1,0 +1,4 @@
+/* Copyright ©2016 All right reserved*/
+
+#define VERSION_MAJOR @VERSION_MAJOR@
+#define VERSION_MINOR @VERSION_MINOR@

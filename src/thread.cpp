@@ -27,4 +27,5 @@ void* Thread::Func(void* arg) {
 	Task* task = thread->task_;
 	if (NULL == task) return NULL;
 	task->Execute(thread->args_);
+	return NULL;
 }
