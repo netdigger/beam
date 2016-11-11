@@ -11,6 +11,7 @@ class Task;
 
 class ThreadPoolImpl {
 public:	
+	~ThreadPoolImpl();
 
 	/* 
 	 * Schedule a task;

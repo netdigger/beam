@@ -4,6 +4,21 @@
 #include "thread_pool_impl.h"
 #include "worker_thread.h"
 
+ThreadPoolImpl::~ThreadPoolImpl() {
+	std::list<WorkerThread*>::iterator it = busys_.begin();
+	for (; it != busys_.end(); ++it) {
+		(*it)->Stop();
+		delete *it;
+	}
+	busys_.clear();
+
+	while(!idles_.empty()) {
+		WorkerThread* item = idles_.top();
+		delete item;
+		idles_.pop();
+	}
+}
+
 int ThreadPoolImpl::Schedule(Task& task, void* arg) {
 	WorkerThread* thread;
 

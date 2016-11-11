@@ -14,6 +14,10 @@ WorkerThread::~WorkerThread() {
 	delete thread_;
 }
 
+int WorkerThread::Stop() {
+	return thread_->Stop();
+}
+
 int WorkerThread::Schedule(Task& task, void* arg) {
 	task_ = &task;
 	arg_ = arg;

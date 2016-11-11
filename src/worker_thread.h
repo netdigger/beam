@@ -13,6 +13,7 @@ public:
 	~WorkerThread();
 	
 	int Schedule(Task&, void*);
+	int Stop();
 private:
 	Thread* thread_;
 	Task* task_;
