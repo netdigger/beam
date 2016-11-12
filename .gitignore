@@ -36,3 +36,6 @@ build
 
 # temporary file
 *.swp
+
+# Python byte code file
+*.pyc

@@ -1,11 +1,16 @@
 /* Copyright ©2016 All right reserved*/
 
-#include <beam/task.h>
-#include <beam/thread.h>
 #include <gtest/gtest.h>
-class ThreadTest: public testing::Test {
-};
+#include <gmock/gmock.h>
+#include <beam/thread.h>
+#include "wait.h"
+#include "mock_task.h"
 
-TEST_F(ThreadTest, AddTask) {
-	ASSERT_TRUE(0);
+TEST(ThreadTest, AddTask) {
+	MockTask task; 
+	EXPECT_CALL(task, Execute(NULL)).Times(1);  
+
+	Thread thread(&task, NULL);
+	thread.Start();
+	Wait(10);
 }
