@@ -30,8 +30,8 @@ int ThreadPoolImpl::Schedule(Task& task, void* arg) {
 	else {
 		thread = idles_.top();
 		idles_.pop();
-		busys_.push_front(thread);
 	}
+	busys_.push_front(thread);
 	mutex_.Unlock();
 	
 	return thread->Schedule(task, arg);
@@ -47,6 +47,7 @@ void ThreadPoolImpl::MoveToIdles(WorkerThread* thread) {
 	for (; it != busys_.end(); ++it) {
 		if ((*it) != thread) continue;
 		busys_.erase(it);
+		break;
 	}
 
 	idles_.push(thread);
