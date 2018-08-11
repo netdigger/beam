@@ -6,6 +6,7 @@ PROJECT(lib${PRJ_NAME})
 # The version number.
 SET(VERSION_MAJOR 0)
 SET(VERSION_MINOR 1)
+SET(VERSION_REVISION 0)
 
 # configure a header file to pass some of the CMake settings
 # to the source code
@@ -14,31 +15,26 @@ CONFIGURE_FILE(
 	"${PROJECT_SOURCE_DIR}/include/${PRJ_NAME}/version.h"
 )
 
-SET(SRCS
-	src/auto_lock.cpp
-	src/mutex.cpp
-	src/semaphore.cpp
-	src/thread.cpp
-	src/thread_pool.cpp
-	src/thread_pool_impl.cpp
-	src/worker_thread.cpp
-)
-
 INCLUDE_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/include
 )
 
-SET(CMAKE_CXX_FLAGS "-Werror -Wall")
+IF(NOT CMAKE_BUILD_TYPE)
+	IF(${CMAKE_CURRENT_BINARY_DIR} STREQUAL ${PROJET_SOURCE_DIR}/release)
+		SET(CMAKE_BUILD_TYPE "Release")
+	ELSE()
+		SET(CMAKE_BUILD_TYPE "Debug")
+	ENDIF()
+ENDIF()
 
+SET(CMAKE_CXX_FLAGS "-Wall -Werror -Wextra")
+SET(CMAKE_CXX_FLAGS_DEBUG "-g")
+SET(CMAKE_CXX_FLAGS_RELEASE "-O0")
+
+ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/src)
 ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/lib/gtest)
 ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/test)
 
-
-ADD_LIBRARY(${PRJ_NAME} SHARED ${SRCS})
-
 # Test
-#enable_testing()
-#aux_source_directory(${PROJECT_SOURCE_DIR}/test TEST_SRCS)
-#add_executable(beamut ${TEST_SRCS})
-#target_link_libraries(beamut gmock beam)
-#add_test(unitTest beamut)
+ENABLE_TESTING()
+ADD_TEST(NAME "ut" COMMAND ${PRJ_NAME}_test)
