@@ -1,16 +1,25 @@
-cmake_minimum_required (VERSION 2.8)
-project (beamut)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
-INCLUDE_DIRECTORIES(
-	${PROJECT_SOURCE_DIR}/../include 
-	${PROJECT_SOURCE_DIR}/../src
-	${PROJECT_SOURCE_DIR}/../lib/gtest/googlemock/include
-	${PROJECT_SOURCE_DIR}/../lib/gtest/googletest/include
-	${PROJECT_BINARY_DIR}
+SET(SRCS
+	src/main.cpp
+	src/object_pool_test.cpp
+	src/thread_pool_impl_test.cpp
+	src/wait.cpp
 )
-set(CMAKE_CXX_FLAGS "-g -Werror -Wall")
+
+MESSAGE(STATUS "dir is ${PROJECT_SOURCE_DIR}")
+
+INCLUDE_DIRECTORIES(
+	${PROJECT_SOURCE_DIR}/src
+	${PROJECT_SOURCE_DIR}/lib/gtest/googlemock/include
+	${PROJECT_SOURCE_DIR}/lib/gtest/googletest/include
+)
+SET(CMAKE_CXX_FLAGS "-g -Werror -Wall")
 
 # Test
-add_executable(beamut ${DIR_SRCS})
-target_link_libraries(beamut gmock beam)
+ADD_EXECUTABLE(${PRJ_NAME}_test ${SRCS})
+TARGET_LINK_LIBRARIES(${PRJ_NAME}_test gmock beam)
+
+SET_TARGET_PROPERTIES(${PRJ_NAME}_test PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+)

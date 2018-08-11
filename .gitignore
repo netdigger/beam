@@ -31,8 +31,13 @@
 # target lib
 libbeam.so
 
+#version.h
+include/beam/version.h
+
 # directory
 build
+debug
+release
 
 # temporary file
 *.swp

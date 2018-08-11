@@ -1,26 +1,40 @@
-cmake_minimum_required (VERSION 2.8)
-project (libbeam)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+
+SET(PRJ_NAME beam)
+PROJECT(lib${PRJ_NAME})
 
 # The version number.
-set (VERSION_MAJOR 0)
-set (VERSION_MINOR 1)
+SET(VERSION_MAJOR 0)
+SET(VERSION_MINOR 1)
 
 # configure a header file to pass some of the CMake settings
 # to the source code
-configure_file (
-	"${PROJECT_SOURCE_DIR}/beam_config.h.in"
-    "${PROJECT_BINARY_DIR}/beam_config.h"
+CONFIGURE_FILE(
+	"${PROJECT_SOURCE_DIR}/version.h.in"
+	"${PROJECT_SOURCE_DIR}/include/${PRJ_NAME}/version.h"
 )
 
-aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
-add_library(beam SHARED ${DIR_SRCS})
+SET(SRCS
+	src/auto_lock.cpp
+	src/mutex.cpp
+	src/semaphore.cpp
+	src/thread.cpp
+	src/thread_pool.cpp
+	src/thread_pool_impl.cpp
+	src/worker_thread.cpp
+)
+
 INCLUDE_DIRECTORIES(
-	${PROJECT_SOURCE_DIR}/include 
+	${PROJECT_SOURCE_DIR}/include
 )
-set(CMAKE_CXX_FLAGS "-Werror -Wall")
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/gtest)
-add_subdirectory(${PROJECT_SOURCE_DIR}/test)
+SET(CMAKE_CXX_FLAGS "-Werror -Wall")
+
+ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/lib/gtest)
+ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/test)
+
+
+ADD_LIBRARY(${PRJ_NAME} SHARED ${SRCS})
 
 # Test
 #enable_testing()
