@@ -6,6 +6,7 @@
 #include <beam/task.h>
 #include <pthread.h>
 
+class WorkerThread;
 class Thread {
 public:
 	Thread(Task* task, void*);
@@ -15,11 +16,7 @@ public:
 	int Stop();
 	int Join();
 private:
-	Task* task_;
-	void* args_;
-	pthread_t thread_;
-
-	static void* Func(void*); 
+	WorkerThread* thread_;
 };
 #endif
 

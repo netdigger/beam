@@ -5,6 +5,7 @@
 
 class ThreadPoolImpl;
 class Task;
+class WorkerThread;
 
 class ThreadPool {
 public:
@@ -15,7 +16,7 @@ public:
 	 * Schedule a task;
 	 * @param task The Scheduled task;
 	 */
-	int Schedule(Task&, void*);
+	WorkerThread* Schedule(Task&, void*);
 	int Wait();
 private:
 	static ThreadPool instance_;

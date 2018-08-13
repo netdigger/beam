@@ -3,6 +3,8 @@
 #include <beam/thread_pool.h>
 #include "thread_pool_impl.h"
 
+ThreadPool ThreadPool::instance_;
+
 ThreadPool::ThreadPool() {
 	impl_ = new ThreadPoolImpl();
 }

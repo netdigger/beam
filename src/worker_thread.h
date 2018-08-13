@@ -14,6 +14,8 @@ public:
 	
 	int Schedule(Task&, void*);
 	int Stop();
+	int Join();
+	int Start();
 private:
 	Thread* thread_;
 	Task* task_;
