@@ -21,6 +21,7 @@ public:
 	 * @param task The Scheduled task;
 	 */
 	WorkerThread* Schedule(Task&, void*);
+	void MoveToIdles(WorkerThread*);
 private:
 	static ThreadPool instance_;
 	
@@ -32,7 +33,6 @@ private:
 
 	ThreadPool();
 	ThreadPool(ThreadPool&){};
-	void MoveToIdles(WorkerThread*);
 };
 #endif
 

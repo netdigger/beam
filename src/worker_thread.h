@@ -2,12 +2,13 @@
 
 #ifndef __WORKER_THREAD_H__
 #define __WORKER_THREAD_H__
-#include <beam/task.h>
-#include <beam/semaphore.h>
+#include <pthread.h>
+#include "beam/mutex.h"
+#include "beam/semaphore.h"
 
-class Thread;
 class ThreadPool;
-class WorkerThread: public Task {
+class Task;
+class WorkerThread {
 public:
 	WorkerThread(ThreadPool*);
 	~WorkerThread();
@@ -17,13 +18,18 @@ public:
 	int Join();
 	int Start();
 private:
-	Thread* thread_;
-	Task* task_;
+	pthread_t thread_;
+
 	void* arg_;
+	Task* task_;
+	ThreadPool* pool_;
 
 	Semaphore sem_;
+	Mutex join_lock_;
 
 	void Execute(void*);
+	void* Run();
+	static void* RunFunc(void*);
 };
 #endif
 
