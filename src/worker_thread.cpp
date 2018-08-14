@@ -4,8 +4,8 @@
 #include "thread_pool_impl.h"
 #include "worker_thread.h"
 
-WorkerThread::WorkerThread(ThreadPoolImpl* pool) {
-	thread_ = new Thread(this, pool);
+WorkerThread::WorkerThread(ThreadPool* ) {
+	//thread_ = new Thread(this, pool);
 	thread_->Start();
 }
 
@@ -33,12 +33,13 @@ int WorkerThread::Schedule(Task& task, void* arg) {
 	return 0;
 }
 
-void WorkerThread::Execute(void* arg) {
-	ThreadPoolImpl* pool = static_cast<ThreadPoolImpl*>(arg);
-
+void WorkerThread::Execute(void* ) {
+	//ThreadPoolImpl* pool = static_cast<ThreadPoolImpl*>(arg);
+/*
 	while(true) {
 		sem_.Wait();
 		task_->Execute(arg_);
 		pool->MoveToIdles(this);
 	}
+	*/
 }

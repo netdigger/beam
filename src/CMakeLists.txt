@@ -6,7 +6,6 @@ SET(SRCS
 	semaphore.cpp
 	thread.cpp
 	thread_pool.cpp
-	thread_pool_impl.cpp
 	worker_thread.cpp
 )
 

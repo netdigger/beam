@@ -6,10 +6,10 @@
 #include <beam/semaphore.h>
 
 class Thread;
-class ThreadPoolImpl;
+class ThreadPool;
 class WorkerThread: public Task {
 public:
-	WorkerThread(ThreadPoolImpl*);
+	WorkerThread(ThreadPool*);
 	~WorkerThread();
 	
 	int Schedule(Task&, void*);

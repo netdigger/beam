@@ -3,6 +3,10 @@
 #ifndef __THREAD_POOL_H__
 #define __THREAD_POOL_H__
 
+#include <list>
+#include <stack>
+#include "beam/mutex.h"
+
 class ThreadPoolImpl;
 class Task;
 class WorkerThread;
@@ -17,14 +21,18 @@ public:
 	 * @param task The Scheduled task;
 	 */
 	WorkerThread* Schedule(Task&, void*);
-	int Wait();
 private:
 	static ThreadPool instance_;
+	
+	int count_; // thread count;
+	Mutex mutex_;
 
-	ThreadPoolImpl* impl_;
+	std::stack<WorkerThread*> idles_;
+	std::list<WorkerThread*> busys_;
 
 	ThreadPool();
 	ThreadPool(ThreadPool&){};
+	void MoveToIdles(WorkerThread*);
 };
 #endif
 

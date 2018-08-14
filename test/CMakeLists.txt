@@ -8,7 +8,6 @@ MESSAGE(STATUS ${CMAKE_MODULE_PATH})
 SET(SRCS
 	main.cpp
 	object_pool_test.cpp
-	thread_pool_impl_test.cpp
 	wait.cpp
 )
 
