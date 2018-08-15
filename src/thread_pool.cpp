@@ -40,7 +40,7 @@ WorkerThread* ThreadPool::Schedule(Task& task, void* arg) {
 	return thread;
 }
 
-void ThreadPool::MoveToIdles(WorkerThread* thread) {
+void ThreadPool::OnFinished(WorkerThread* thread) {
 	mutex_.Lock();
 	for (auto it = busys_.begin(); it != busys_.end(); ++it) {
 		if ((*it) != thread) continue;
@@ -52,3 +52,13 @@ void ThreadPool::MoveToIdles(WorkerThread* thread) {
 	mutex_.Unlock();
 }
 
+void ThreadPool::OnCanceled(WorkerThread* thread) {
+	mutex_.Lock();
+	for (auto it = busys_.begin(); it != busys_.end(); ++it) {
+		if ((*it) != thread) continue;
+		busys_.erase(it);
+		break;
+	}
+
+	mutex_.Unlock();
+}

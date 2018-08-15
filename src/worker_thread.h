@@ -29,7 +29,9 @@ private:
 
 	void Execute(void*);
 	void* Run();
+	void Cleanup();
 	static void* RunFunc(void*);
+	static void CleanupFunc(void*);
 };
 #endif
 

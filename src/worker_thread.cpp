@@ -34,17 +34,30 @@ int WorkerThread::Schedule(Task& task, void* arg) {
 }
 
 void* WorkerThread::Run() {
+	pthread_cleanup_push(CleanupFunc, this);
 	while(true) {
 		sem_.Wait();
 		join_lock_.Lock();
 		task_->Execute(arg_);
 		join_lock_.Unlock();
-		pool_->MoveToIdles(this);
+		pool_->OnFinished(this);
 	}
+
+	pthread_cleanup_pop(1);
 	return NULL;
+}
+
+void WorkerThread::Cleanup() {
+	pool_->OnCanceled(this);
 }
 
 void* WorkerThread::RunFunc(void* arg) {
 	WorkerThread* thread = static_cast<WorkerThread*>(arg);
 	return thread->Run();
 }
+
+void WorkerThread::CleanupFunc(void* arg) {
+	WorkerThread* thread = static_cast<WorkerThread*>(arg);
+	thread->Cleanup();
+}
+

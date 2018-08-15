@@ -21,7 +21,8 @@ public:
 	 * @param task The Scheduled task;
 	 */
 	WorkerThread* Schedule(Task&, void*);
-	void MoveToIdles(WorkerThread*);
+	void OnFinished(WorkerThread*);
+	void OnCanceled(WorkerThread*);
 private:
 	static ThreadPool instance_;
 	
