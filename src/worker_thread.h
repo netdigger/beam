@@ -6,11 +6,11 @@
 #include "beam/mutex.h"
 #include "beam/semaphore.h"
 
-class ThreadPool;
+class ThreadObserver;
 class Task;
 class WorkerThread {
 public:
-	WorkerThread(ThreadPool*);
+	WorkerThread(ThreadObserver*);
 	~WorkerThread();
 	
 	int Schedule(Task&, void*);
@@ -22,7 +22,7 @@ private:
 
 	void* arg_;
 	Task* task_;
-	ThreadPool* pool_;
+	ThreadObserver* observer_;
 
 	Semaphore sem_;
 	Mutex join_lock_;

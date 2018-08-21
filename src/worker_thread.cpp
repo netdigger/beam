@@ -1,10 +1,10 @@
 /* Copyright ©2016 All right reserved*/
 
 #include <beam/thread.h>
-#include "thread_pool.h"
+#include "thread_observer.h"
 #include "worker_thread.h"
 
-WorkerThread::WorkerThread(ThreadPool* pool): pool_(pool) {
+WorkerThread::WorkerThread(ThreadObserver* ob): observer_(ob) {
 	::pthread_create(&thread_, NULL, RunFunc, this);
 }
 
@@ -40,7 +40,7 @@ void* WorkerThread::Run() {
 		join_lock_.Lock();
 		task_->Execute(arg_);
 		join_lock_.Unlock();
-		pool_->OnFinished(this);
+		observer_->OnTaskFinished(this);
 	}
 
 	pthread_cleanup_pop(1);
@@ -48,7 +48,7 @@ void* WorkerThread::Run() {
 }
 
 void WorkerThread::Cleanup() {
-	pool_->OnCanceled(this);
+	observer_->OnCanceled(this);
 }
 
 void* WorkerThread::RunFunc(void* arg) {

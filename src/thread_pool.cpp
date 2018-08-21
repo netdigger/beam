@@ -40,7 +40,7 @@ WorkerThread* ThreadPool::Schedule(Task& task, void* arg) {
 	return thread;
 }
 
-void ThreadPool::OnFinished(WorkerThread* thread) {
+void ThreadPool::OnTaskFinished(WorkerThread* thread) {
 	mutex_.Lock();
 	for (auto it = busys_.begin(); it != busys_.end(); ++it) {
 		if ((*it) != thread) continue;

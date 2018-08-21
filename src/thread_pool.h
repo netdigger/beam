@@ -6,12 +6,12 @@
 #include <list>
 #include <stack>
 #include "beam/mutex.h"
+#include "thread_observer.h"
 
-class ThreadPoolImpl;
 class Task;
 class WorkerThread;
 
-class ThreadPool {
+class ThreadPool: public ThreadObserver {
 public:
 	~ThreadPool();
 	static ThreadPool& Instance() {return instance_;};
@@ -21,8 +21,6 @@ public:
 	 * @param task The Scheduled task;
 	 */
 	WorkerThread* Schedule(Task&, void*);
-	void OnFinished(WorkerThread*);
-	void OnCanceled(WorkerThread*);
 private:
 	static ThreadPool instance_;
 	
@@ -34,6 +32,10 @@ private:
 
 	ThreadPool();
 	ThreadPool(ThreadPool&){};
+	
+	// Thread Observer
+	void OnTaskFinished(WorkerThread*);
+	void OnCanceled(WorkerThread*);
 };
 #endif
 
