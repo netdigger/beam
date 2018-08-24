@@ -3,11 +3,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 MESSAGE(STATUS ${CMAKE_MODULE_PATH})
 
-#INCLUDE(${PROJECT_SOURCE_DIR}/cmake/FindGMock.cmake)
-
 SET(SRCS
 	main.cpp
 	object_pool_test.cpp
+	worker_thread_test.cpp
 	wait.cpp
 )
 

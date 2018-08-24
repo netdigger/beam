@@ -44,3 +44,6 @@ release
 
 # Python byte code file
 *.pyc
+
+# compile database  file
+compile_commands.json
