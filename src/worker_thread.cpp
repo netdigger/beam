@@ -1,6 +1,7 @@
 /* Copyright ©2016 All right reserved*/
 
-#include <beam/thread.h>
+#include <stdio.h>
+#include "beam/thread.h"
 #include "thread_observer.h"
 #include "worker_thread.h"
 
@@ -17,7 +18,8 @@ int WorkerThread::Start() {
 }
 
 int WorkerThread::Stop() {
-	return ::pthread_cancel(thread_);
+	::pthread_cancel(thread_);
+    return ::pthread_join(thread_, NULL);
 }
 
 int WorkerThread::Join() {
@@ -29,7 +31,6 @@ int WorkerThread::Join() {
 int WorkerThread::Schedule(Task& task, void* arg) {
 	task_ = &task;
 	arg_ = arg;
-	sem_.Post();
 	return 0;
 }
 
