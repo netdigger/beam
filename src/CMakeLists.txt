@@ -1,22 +1,22 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
 SET(SRCS
-	auto_lock.cpp
-	mutex.cpp
-	semaphore.cpp
-	thread.cpp
-	thread_pool.cpp
-	worker_thread.cpp
-)
+    auto_lock.cpp
+    mutex.cpp
+    semaphore.cpp
+    thread.cpp
+    thread_pool.cpp
+    worker_thread.cpp
+    )
 
 ADD_LIBRARY(${PRJ_NAME} SHARED ${SRCS})
 SET_TARGET_PROPERTIES(${PRJ_NAME} PROPERTIES
-	VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}
-	SOVERSION ${VERSION_MAJOR}
-	LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
-)
+    VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}
+    SOVERSION ${VERSION_MAJOR}
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
 
 # install
 INSTALL(TARGETS ${PRJ_NAME}
-	LIBRARY DESTINATION lib
-)
+    LIBRARY DESTINATION lib
+    )

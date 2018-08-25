@@ -3,39 +3,42 @@
 #ifndef __THREAD_POOL_H__
 #define __THREAD_POOL_H__
 
+#include <beam/mutex.h>
 #include <list>
 #include <stack>
-#include "beam/mutex.h"
 #include "thread_observer.h"
+#include "worker_thread.h"
 
 class Task;
-class WorkerThread;
 
-class ThreadPool: public ThreadObserver {
-public:
-	~ThreadPool();
-	static ThreadPool& Instance() {return instance_;};
-	
-	/* 
-	 * Schedule a task;
-	 * @param task The Scheduled task;
-	 */
-	WorkerThread* Schedule(Task&, void*);
-private:
-	static ThreadPool instance_;
-	
-	int count_; // thread count;
-	Mutex mutex_;
+class ThreadPool : public ThreadObserver {
+   public:
+    ~ThreadPool();
 
-	std::stack<WorkerThread*> idles_;
-	std::list<WorkerThread*> busys_;
+    /*
+     * Schedule a task;
+     * @param task The Scheduled task;
+     * @args Arguments used in task;
+     */
+    static Thread* Schedule(Task& task, void* arg) {
+        return instance_.DoSchedule(task, arg);
+    };
 
-	ThreadPool();
-	ThreadPool(ThreadPool&){};
-	
-	// Thread Observer
-	void OnTaskFinished(WorkerThread*);
-	void OnCanceled(WorkerThread*);
+   private:
+    static ThreadPool instance_;
+
+    int count_;  // thread count;
+    Mutex mutex_;
+
+    std::stack<WorkerThread*> idles_;
+    std::list<WorkerThread*> busys_;
+
+    ThreadPool(){};
+    ThreadPool(ThreadPool&){};
+    Thread* DoSchedule(Task&, void*);
+
+    // Thread Observer
+    void OnTaskFinished(WorkerThread*);
+    void OnCanceled(WorkerThread*);
 };
 #endif
-

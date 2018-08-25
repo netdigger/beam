@@ -5,33 +5,35 @@
 #include <pthread.h>
 #include "beam/mutex.h"
 #include "beam/semaphore.h"
+#include "beam/thread.h"
 
 class ThreadObserver;
 class Task;
-class WorkerThread {
-public:
-	WorkerThread(ThreadObserver*);
-	~WorkerThread();
-	
-	int Schedule(Task&, void*);
-	int Stop();
-	int Join();
-	int Start();
-private:
-	pthread_t thread_;
+class WorkerThread : public Thread {
+   public:
+    WorkerThread(ThreadObserver*);
+    ~WorkerThread();
 
-	void* arg_;
-	Task* task_;
-	ThreadObserver* observer_;
+    int Schedule(Task&, void*);
+    int Stop();
+    int Join();
+    bool IsCanceled() const { return canceled_; };
 
-	Semaphore sem_;
-	Mutex join_lock_;
+   private:
+    pthread_t thread_;
 
-	void Execute(void*);
-	void* Run();
-	void Cleanup();
-	static void* RunFunc(void*);
-	static void CleanupFunc(void*);
+    void* arg_;
+    bool canceled_;
+    Task* task_;
+    ThreadObserver* observer_;
+
+    Semaphore sem_;
+    Mutex join_lock_;
+
+    void Execute(void*);
+    void* Run();
+    void Cleanup();
+    static void* RunFunc(void*);
+    static void CleanupFunc(void*);
 };
 #endif
-

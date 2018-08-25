@@ -4,19 +4,14 @@
 #define __THREAD_H__
 
 #include <beam/task.h>
-#include <pthread.h>
 
-class WorkerThread;
 class Thread {
-public:
-	Thread(Task* task, void*);
-	~Thread();
+   public:
+    virtual ~Thread(){};
 
-	int Start();
-	int Stop();
-	int Join();
-private:
-	WorkerThread* thread_;
+    virtual int Stop() = 0;
+    virtual int Join() = 0;
+
+    static Thread* Run(Task&, void*);
 };
 #endif
-
