@@ -27,9 +27,7 @@ class ThreadPool : public ThreadObserver {
    private:
     static ThreadPool instance_;
 
-    int count_;  // thread count;
     Mutex mutex_;
-
     std::stack<WorkerThread*> idles_;
     std::list<WorkerThread*> busys_;
 
@@ -38,7 +36,6 @@ class ThreadPool : public ThreadObserver {
     Thread* DoSchedule(Task&, void*);
 
     // Thread Observer
-    void OnTaskFinished(WorkerThread*);
-    void OnCanceled(WorkerThread*);
+    void OnFinished(WorkerThread*);
 };
 #endif

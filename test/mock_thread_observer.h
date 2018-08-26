@@ -5,11 +5,9 @@
 
 #include "thread_observer.h"
 
-class MockThreadObserver: public ThreadObserver {
-public:
-	MOCK_METHOD1(OnTaskFinished, void(WorkerThread*));
-	MOCK_METHOD1(OnCanceled, void(WorkerThread*));
+class MockThreadObserver : public ThreadObserver {
+   public:
+    MOCK_METHOD1(OnFinished, void(WorkerThread*));
 };
 
-#endif 
-
+#endif

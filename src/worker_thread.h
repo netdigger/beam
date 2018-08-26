@@ -23,7 +23,9 @@ class WorkerThread : public Thread {
     pthread_t thread_;
 
     void* arg_;
+    bool idle_;
     bool canceled_;
+    bool deleted_;
     Task* task_;
     ThreadObserver* observer_;
 

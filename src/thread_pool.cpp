@@ -21,21 +21,21 @@ ThreadPool::~ThreadPool() {
 }
 
 Thread* ThreadPool::DoSchedule(Task& task, void* arg) {
-    WorkerThread* thread;
+    WorkerThread* thread = NULL;
 
     mutex_.Lock();
-    if (idles_.empty()) {
-        thread = new WorkerThread(this);
-        count_++;
-    } else {
+    while (!idles_.empty()) {
         thread = idles_.top();
-        // If thread was canceled, it should be cleared
-        while (thread->IsCanceled()) {
-            delete thread;
-            idles_.pop();
-            thread = idles_.top();
-        }
         idles_.pop();
+        // If thread was canceled, it should be cleared
+        if (thread->IsCanceled()) {
+            delete thread;
+            thread = NULL;
+        }
+    }
+
+    if (NULL == thread) {
+        thread = new WorkerThread(this);
     }
     busys_.push_front(thread);
     mutex_.Unlock();
@@ -44,7 +44,7 @@ Thread* ThreadPool::DoSchedule(Task& task, void* arg) {
     return thread;
 }
 
-void ThreadPool::OnTaskFinished(WorkerThread* thread) {
+void ThreadPool::OnFinished(WorkerThread* thread) {
     mutex_.Lock();
     for (auto it = busys_.begin(); it != busys_.end(); ++it) {
         if ((*it) != thread) continue;
@@ -53,18 +53,5 @@ void ThreadPool::OnTaskFinished(WorkerThread* thread) {
     }
 
     idles_.push(thread);
-    mutex_.Unlock();
-}
-
-void ThreadPool::OnCanceled(WorkerThread* thread) {
-    AutoLock lock(mutex_);
-    mutex_.Lock();
-    for (auto it = busys_.begin(); it != busys_.end(); ++it) {
-        if ((*it) != thread) continue;
-        delete *it;
-        busys_.erase(it);
-        break;
-    }
-
     mutex_.Unlock();
 }

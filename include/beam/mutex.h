@@ -6,14 +6,16 @@
 #include <beam/locker.h>
 #include <pthread.h>
 
-class Mutex: public Locker {
-public:
-	Mutex();
-	virtual ~Mutex();
+class Mutex : public Locker {
+   public:
+    Mutex();
+    virtual ~Mutex();
 
-	int Lock();
-	int Unlock();
-private:
-	pthread_mutex_t mutex_;
+    int Lock();
+    int Unlock();
+    int TryLock();
+
+   private:
+    pthread_mutex_t mutex_;
 };
 #endif

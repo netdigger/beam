@@ -2,10 +2,8 @@
 
 class WorkerThread;
 class ThreadObserver {
-public:
-	virtual ~ThreadObserver() {};
+   public:
+    virtual ~ThreadObserver(){};
 
-	virtual void OnTaskFinished(WorkerThread*) = 0;
-	virtual void OnCanceled(WorkerThread*) = 0;
+    virtual void OnFinished(WorkerThread*) = 0;
 };
-
