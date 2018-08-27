@@ -4,6 +4,6 @@
 #include "thread_pool.h"
 
 using namespace beam;
-Thread* Thread::Run(Task& task, void* args) {
+Thread* Thread::Start(Task& task, void* args) {
     return ThreadPool::Schedule(task, args);
 }

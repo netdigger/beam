@@ -11,6 +11,6 @@ TEST(ThreadTest, Run) {
     MockTask task;
     EXPECT_CALL(task, Execute(NULL)).Times(1);
 
-    Thread* thread = Thread::Run(task, NULL);
+    Thread* thread = Thread::Start(task, NULL);
     thread->Join();
 }

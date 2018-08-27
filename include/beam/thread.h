@@ -13,7 +13,7 @@ class Thread {
     virtual int Stop() = 0;
     virtual int Join() = 0;
 
-    static Thread* Run(Task&, void*);
+    static Thread* Start(Task&, void*);
 };
 }  // namespace beam
 #endif
