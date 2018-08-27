@@ -7,9 +7,10 @@
 #include "beam/task.h"
 #include "wait.h"
 
+using namespace beam;
 class MockTask : public Task {
-public:
-	MOCK_METHOD1(Execute, void(void*));
+   public:
+    MOCK_METHOD1(Execute, void(void*));
 
     void Wait(void* arg) {
         int msec = *static_cast<int*>(arg);
@@ -17,5 +18,4 @@ public:
     }
 };
 
-#endif 
-
+#endif

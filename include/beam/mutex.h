@@ -6,6 +6,7 @@
 #include <beam/locker.h>
 #include <pthread.h>
 
+namespace beam {
 class Mutex : public Locker {
    public:
     Mutex();
@@ -18,4 +19,5 @@ class Mutex : public Locker {
    private:
     pthread_mutex_t mutex_;
 };
+}  // namespace beam
 #endif

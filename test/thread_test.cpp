@@ -1,16 +1,16 @@
 /* Copyright ©2016 All right reserved*/
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include <beam/thread.h>
-#include "wait.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include "mock_task.h"
+#include "wait.h"
 
-TEST(ThreadTest, AddTask) {
-	MockTask task; 
-	EXPECT_CALL(task, Execute(NULL)).Times(1);  
+using namespace beam;
+TEST(ThreadTest, Run) {
+    MockTask task;
+    EXPECT_CALL(task, Execute(NULL)).Times(1);
 
-	Thread thread(&task, NULL);
-	thread.Start();
-	Wait(10);
+    Thread* thread = Thread::Run(task, NULL);
+    thread->Join();
 }

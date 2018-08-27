@@ -5,6 +5,7 @@
 
 #include <beam/task.h>
 
+namespace beam {
 class Thread {
    public:
     virtual ~Thread(){};
@@ -14,4 +15,5 @@ class Thread {
 
     static Thread* Run(Task&, void*);
 };
+}  // namespace beam
 #endif

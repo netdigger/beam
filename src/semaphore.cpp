@@ -2,6 +2,7 @@
 
 #include <beam/semaphore.h>
 
+using namespace beam;
 Semaphore::Semaphore(int value) {
     if (value < 0) value = 0;
     ::sem_init(&sem_, 0, value);

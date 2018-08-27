@@ -6,7 +6,7 @@
 #include "beam/mutex.h"
 #include "beam/semaphore.h"
 #include "beam/thread.h"
-
+namespace beam {
 class ThreadObserver;
 class Task;
 class WorkerThread : public Thread {
@@ -38,4 +38,5 @@ class WorkerThread : public Thread {
     static void* RunFunc(void*);
     static void CleanupFunc(void*);
 };
+}  // namespace beam
 #endif

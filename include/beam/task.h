@@ -3,11 +3,11 @@
 #ifndef __TASK_H__
 #define __TASK_H__
 
+namespace beam {
 class Task {
-public:
-	virtual ~Task(){};
-	virtual void Execute(void*) = 0;
+   public:
+    virtual ~Task(){};
+    virtual void Execute(void*) = 0;
 };
-
+}  // namespace beam
 #endif
-

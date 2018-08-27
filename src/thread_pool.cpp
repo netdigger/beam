@@ -4,6 +4,7 @@
 #include "beam/auto_lock.h"
 #include "worker_thread.h"
 
+using namespace beam;
 ThreadPool ThreadPool::instance_;
 
 ThreadPool::~ThreadPool() {

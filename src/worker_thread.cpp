@@ -4,6 +4,7 @@
 #include "beam/thread.h"
 #include "thread_observer.h"
 
+using namespace beam;
 WorkerThread::WorkerThread(ThreadObserver* ob)
     : idle_(true), canceled_(false), deleted_(false), observer_(ob) {
     task_ = NULL;

@@ -5,6 +5,7 @@
 
 #include "thread_observer.h"
 
+using namespace beam;
 class MockThreadObserver : public ThreadObserver {
    public:
     MOCK_METHOD1(OnFinished, void(WorkerThread*));

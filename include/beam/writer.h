@@ -5,11 +5,12 @@
 
 #include <unistd.h>
 
+namespace beam {
 class Writer {
-public:
-	virtual ~Writer() {};
+   public:
+    virtual ~Writer(){};
 
-	virtual ssize_t Write(const void* buffer, size_t size);
+    virtual ssize_t Write(const void* buffer, size_t size);
 };
+}  // namespace beam
 #endif
-

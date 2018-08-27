@@ -5,14 +5,17 @@
 
 #include <semaphore.h>
 
+namespace beam {
 class Semaphore {
-public:
-	Semaphore(int value = 0);
-	~Semaphore();
+   public:
+    Semaphore(int value = 0);
+    ~Semaphore();
 
-	int Wait();
-	int Post();
-private:
-	sem_t sem_;
+    int Wait();
+    int Post();
+
+   private:
+    sem_t sem_;
 };
+}  // namespace beam
 #endif

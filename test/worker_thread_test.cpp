@@ -6,6 +6,7 @@
 #include "mock_thread_observer.h"
 #include "wait.h"
 
+using namespace beam;
 using testing::Invoke;
 
 class WorkThreadTest : public testing::Test {

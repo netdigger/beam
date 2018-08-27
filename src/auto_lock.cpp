@@ -2,12 +2,7 @@
 
 #include <beam/auto_lock.h>
 #include <beam/locker.h>
+using namespace beam;
+AutoLock::AutoLock(Locker& lock) : lock_(lock) { lock_.Lock(); }
 
-AutoLock::AutoLock(Locker& lock): lock_(lock) {
-	lock_.Lock();
-}
-
-AutoLock::~AutoLock() {
-	lock_.Unlock();
-}
-
+AutoLock::~AutoLock() { lock_.Unlock(); }

@@ -5,11 +5,12 @@
 
 #include <unistd.h>
 
+namespace beam {
 class Reader {
-public:
-	virtual ~Reader() {};
+   public:
+    virtual ~Reader(){};
 
-	virtual ssize_t Read(void* buffer, size_t size);
+    virtual ssize_t Read(void* buffer, size_t size);
 };
+}  // namespace beam
 #endif
-

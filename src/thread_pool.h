@@ -9,6 +9,7 @@
 #include "thread_observer.h"
 #include "worker_thread.h"
 
+namespace beam {
 class Task;
 
 class ThreadPool : public ThreadObserver {
@@ -38,4 +39,5 @@ class ThreadPool : public ThreadObserver {
     // Thread Observer
     void OnFinished(WorkerThread*);
 };
+}  // namespace beam
 #endif

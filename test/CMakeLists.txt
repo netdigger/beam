@@ -7,6 +7,7 @@ SET(SRCS
 	main.cpp
 	object_pool_test.cpp
     thread_pool_test.cpp
+    thread_test.cpp
 	worker_thread_test.cpp
 	wait.cpp
 )

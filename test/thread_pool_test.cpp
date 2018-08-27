@@ -6,6 +6,7 @@
 #include "mock_task.h"
 #include "wait.h"
 
+using namespace beam;
 using testing::Invoke;
 
 class ThreadPoolTest : public testing::Test {
