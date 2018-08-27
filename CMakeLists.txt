@@ -8,7 +8,7 @@ PROJECT(lib${PRJ_NAME})
 # The version number.
 SET(VERSION_MAJOR 0)
 SET(VERSION_MINOR 1)
-SET(VERSION_REVISION 0)
+SET(VERSION_REVISION 1)
 
 # configure a header file to pass some of the CMake settings
 # to the source code

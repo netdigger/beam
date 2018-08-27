@@ -6,6 +6,9 @@ SET(SRCS
     semaphore.cpp
     thread.cpp
     thread_pool.cpp
+    timer.cpp
+    timer_manager.cpp
+    timer_worker.cpp
     worker_thread.cpp
     )
 
