@@ -3,25 +3,31 @@
 #ifndef __TIMER_WORKER_H__
 #define __TIMER_WORKER_H__
 
-#include <signal.h>
-#include <time.h>
+#include "beam/mutex.h"
+#include "beam/task.h"
 #include "beam/timer.h"
 
 namespace beam {
-class TimerWorker : public Timer {
+class Thread;
+class TimerWorker : public Timer, public Task {
    public:
+    TimerWorker(Task&, void*, bool);
     virtual ~TimerWorker(){};
+    Status Schedule();
+    Status GetStatus() { return status_; };
 
-    int Schedule(Type, Task&, void*);
-    int Stop();
-    Status GetStatus();
+    // Timer
+    Status Stop();
+    // Task
+    void Run(void*);
 
    private:
-    timer_t timer_;
-    Task* task_;
+    Mutex mutex_;
+    Task& task_;
     void* args_;
-    Type type_;
-    struct sigevent sigevent_;
+    Thread* thread_;
+    Status status_;
+    bool run_once_;
 };
 }  // namespace beam
 #endif

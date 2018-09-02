@@ -1,11 +1,36 @@
 /* Copyright ©2018 All right reserved, Author: netdigger*/
 
 #include "timer_worker.h"
+#include "beam/auto_lock.h"
+#include "beam/thread.h"
 using namespace beam;
 
-int TimerWorker::Schedule(Type, Task&, void*) {
-    int rst = timer_create(SIGEV_THREAD, &sigevent_, &timer_);
-    return rst;
+TimerWorker::TimerWorker(Task& task, void* args, bool once)
+    : task_(task), args_(args), run_once_(once) {
+    status_ = kWaiting;
 }
-int TimerWorker::Stop() { return 0; }
-Timer::Status TimerWorker::GetStatus() { return kStopped; }
+
+Timer::Status TimerWorker::Schedule() {
+    AutoLock lock(mutex_);
+    if (kStopped == status_) return kStopped;
+    status_ = kRunning;
+    thread_ = Thread::Start(task_, args_);
+    return status_;
+}
+
+void TimerWorker::Run(void* args) {
+    task_.Run(args);
+    mutex_.Lock();
+    if (run_once_)
+        status_ = kStopped;
+    else if (kStopped != status_)
+        status_ = kWaiting;
+    mutex_.Unlock();
+}
+
+Timer::Status TimerWorker::Stop() {
+    AutoLock lock(mutex_);
+    if (kRunning == status_) thread_->Stop();
+    status_ = kStopped;
+    return status_;
+}

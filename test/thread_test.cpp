@@ -9,7 +9,7 @@
 using namespace beam;
 TEST(ThreadTest, Run) {
     MockTask task;
-    EXPECT_CALL(task, Execute(NULL)).Times(1);
+    EXPECT_CALL(task, Run(NULL)).Times(1);
 
     Thread* thread = Thread::Start(task, NULL);
     thread->Join();

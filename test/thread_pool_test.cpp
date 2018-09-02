@@ -19,7 +19,7 @@ class ThreadPoolTest : public testing::Test {
 };
 
 TEST_F(ThreadPoolTest, ScheduleSequence) {
-    EXPECT_CALL(task_, Execute(&wait_time_)).Times(2);
+    EXPECT_CALL(task_, Run(&wait_time_)).Times(2);
 
     Thread* thread_1 = ThreadPool::Schedule(task_, &wait_time_);
     thread_1->Join();
@@ -29,7 +29,7 @@ TEST_F(ThreadPoolTest, ScheduleSequence) {
 }
 
 TEST_F(ThreadPoolTest, ScheduleParalleles) {
-    EXPECT_CALL(task_, Execute(&wait_time_))
+    EXPECT_CALL(task_, Run(&wait_time_))
         .Times(2)
         .WillOnce(Invoke(&task_, &MockTask::Wait))
         .WillOnce(testing::Return());
@@ -42,7 +42,7 @@ TEST_F(ThreadPoolTest, ScheduleParalleles) {
 }
 
 TEST_F(ThreadPoolTest, ThreadCanceled) {
-    EXPECT_CALL(task_, Execute(&wait_time_))
+    EXPECT_CALL(task_, Run(&wait_time_))
         .Times(2)
         .WillOnce(Invoke(&task_, &MockTask::Wait))
         .WillOnce(testing::Return());

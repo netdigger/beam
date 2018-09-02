@@ -8,17 +8,12 @@ class Timer {
    public:
     virtual ~Timer(){};
 
-    enum Type {
-        kOnce = 1,  // Task will be execute one time
-        kRepeat     // Task is being executed untile removed
-    };
+    enum Status { kWaiting = 1, kRunning, kStopped };
 
-    enum Status { kWaiting = 1, kRuning, kStopped };
+    virtual Status Stop() = 0;
 
-    virtual int Stop() = 0;
-    virtual Status GetStatus() = 0;
-
-    static Timer* Start(Type, Task&, void*);
+    static Timer* DoOnce(Task&, void*, int);
+    static Timer* DoRepeat(Task&, void*, int);
 };
 }  // namespace beam
 #endif

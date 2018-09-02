@@ -5,6 +5,10 @@
 #include "timer_manager.h"
 
 using namespace beam;
-Timer* Timer::Start(Timer::Type type, Task& task, void* args) {
-    return TimerManager::Schedule(type, task, args);
+Timer* Timer::DoOnce(Task& task, void* args, int time) {
+    return TimerManager::Add(task, args, time, true);
+}
+
+Timer* Timer::DoRepeat(Task& task, void* args, int time) {
+    return TimerManager::Add(task, args, time, true);
 }

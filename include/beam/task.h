@@ -7,7 +7,7 @@ namespace beam {
 class Task {
    public:
     virtual ~Task(){};
-    virtual void Execute(void*) = 0;
+    virtual void Run(void*) = 0;
 };
 }  // namespace beam
 #endif

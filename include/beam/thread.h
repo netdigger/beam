@@ -3,9 +3,8 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include <beam/task.h>
-
 namespace beam {
+class Task;
 class Thread {
    public:
     virtual ~Thread(){};

@@ -1,6 +1,7 @@
 /* Copyright ©2016 All right reserved*/
 
 #include "worker_thread.h"
+#include "beam/task.h"
 #include "beam/thread.h"
 #include "thread_observer.h"
 
@@ -41,7 +42,7 @@ void* WorkerThread::Run() {
     pthread_cleanup_push(CleanupFunc, this);
     while (true) {
         sem_.Wait();
-        if (NULL != task_) task_->Execute(arg_);
+        if (NULL != task_) task_->Run(arg_);
         task_ = NULL;
         observer_->OnFinished(this);
         idle_ = true;

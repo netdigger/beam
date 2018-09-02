@@ -21,7 +21,7 @@ class WorkThreadTest : public testing::Test {
 };
 
 TEST_F(WorkThreadTest, Schedule) {
-    EXPECT_CALL(task_, Execute(&wait_time_)).Times(2);
+    EXPECT_CALL(task_, Run(&wait_time_)).Times(2);
     EXPECT_CALL(ob_, OnFinished(thread_)).Times(2);
 
     thread_->Schedule(task_, &wait_time_);
@@ -31,7 +31,7 @@ TEST_F(WorkThreadTest, Schedule) {
 }
 
 TEST_F(WorkThreadTest, Cancel) {
-    EXPECT_CALL(task_, Execute(&wait_time_))
+    EXPECT_CALL(task_, Run(&wait_time_))
         .Times(1)
         .WillOnce(Invoke(&task_, &MockTask::Wait));
     EXPECT_CALL(ob_, OnFinished(thread_)).Times(1);
@@ -42,7 +42,7 @@ TEST_F(WorkThreadTest, Cancel) {
 }
 
 TEST_F(WorkThreadTest, Join) {
-    EXPECT_CALL(task_, Execute(&wait_time_))
+    EXPECT_CALL(task_, Run(&wait_time_))
         .Times(1)
         .WillOnce(Invoke(&task_, &MockTask::Wait));
     EXPECT_CALL(ob_, OnFinished(thread_)).Times(1);
