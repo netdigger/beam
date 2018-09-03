@@ -12,6 +12,7 @@ class Thread;
 class TimerTrigger : public Task {
    public:
     TimerTrigger(Task&, void*);
+    virtual ~TimerTrigger();
 
    private:
     Task& task_;
@@ -19,6 +20,7 @@ class TimerTrigger : public Task {
     Thread* thread_;
 
     timer_t timer_id_;
+    sigset_t old_sigset_;
     struct sigevent sigevent_;
     struct itimerspec itime_;
 

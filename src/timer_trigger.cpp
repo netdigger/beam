@@ -7,12 +7,24 @@
 
 using namespace beam;
 TimerTrigger::TimerTrigger(Task& task, void* args) : task_(task), args_(args) {
+    // Blocking signal must be done in main thread
+    sigset_t sigset;
+    ::sigemptyset(&sigset);
+    ::sigaddset(&sigset, SIGRTMIN);
+    ::sigprocmask(SIG_BLOCK, &sigset, &old_sigset_);
+
     thread_ = Thread::Start(*this, NULL);
     if (init() != 0) {
         ::printf("Error in initial timer triger\n");
         thread_->Stop();
         thread_ = NULL;
     }
+}
+
+TimerTrigger::~TimerTrigger() {
+    ::timer_delete(timer_id_);
+    thread_->Stop();
+    ::sigprocmask(SIG_SETMASK, &old_sigset_, NULL);
 }
 
 void TimerTrigger::Run(void*) {
@@ -38,8 +50,6 @@ int TimerTrigger::init() {
         ::perror("timer create");
         return -1;
     }
-
-    ::printf("timer ID is 0x%lx\n", (long)timer_id_);
 
     itime_.it_value.tv_sec = 0;
     itime_.it_value.tv_nsec = 1000000;

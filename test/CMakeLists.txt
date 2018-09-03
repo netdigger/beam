@@ -6,6 +6,7 @@ MESSAGE(STATUS ${CMAKE_MODULE_PATH})
 SET(SRCS
 	main.cpp
 	object_pool_test.cpp
+    timer_trigger_test.cpp
     thread_pool_test.cpp
     thread_test.cpp
 	worker_thread_test.cpp
