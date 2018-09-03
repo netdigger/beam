@@ -8,9 +8,7 @@ class Timer {
    public:
     virtual ~Timer(){};
 
-    enum Status { kWaiting = 1, kRunning, kStopped };
-
-    virtual Status Stop() = 0;
+    virtual int Cancel() = 0;
 
     static Timer* DoOnce(Task&, void*, int);
     static Timer* DoRepeat(Task&, void*, int);

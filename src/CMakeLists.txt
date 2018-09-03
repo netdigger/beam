@@ -8,6 +8,7 @@ SET(SRCS
     thread_pool.cpp
     timer.cpp
     timer_manager.cpp
+    timer_trigger.cpp
     timer_worker.cpp
     worker_thread.cpp
     )

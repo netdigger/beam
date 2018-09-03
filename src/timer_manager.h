@@ -3,21 +3,18 @@
 #ifndef __TIMER_MANAGER_H__
 #define __TIMER_MANAGER_H__
 
-#include <signal.h>
-#include <time.h>
 #include <set>
 #include "beam/mutex.h"
+#include "beam/task.h"
 #include "beam/timer.h"
 
 namespace beam {
 class TimerWorker;
-class TimerManager {
+class TimerManager : public Task {
    public:
     static Timer* Add(Task& task, void* args, int time, bool once) {
         return instance_.DoAdd(task, args, time, once);
     };
-
-    static void Schedule() { instance_.DoSchedule(); };
 
    private:
     static TimerManager instance_;
@@ -32,10 +29,8 @@ class TimerManager {
     Mutex mutex_;
     std::set<TimerInfo> workers_;
 
-    // timer_t timer_;
-    // struct sigevent sigevent_;
     Timer* DoAdd(Task&, void*, int, bool);
-    void DoSchedule();
+    void Run(void*);
 };
 }  // namespace beam
 #endif

@@ -13,11 +13,14 @@ class TimerWorker : public Timer, public Task {
    public:
     TimerWorker(Task&, void*, bool);
     virtual ~TimerWorker(){};
+
+    enum Status { kWaiting = 1, kRunning, kCancelled };
+
     Status Schedule();
     Status GetStatus() { return status_; };
 
     // Timer
-    Status Stop();
+    int Cancel();
     // Task
     void Run(void*);
 
