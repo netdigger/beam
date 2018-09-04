@@ -1,6 +1,6 @@
 /* Copyright ©2018 All right reserved, Author: netdigger*/
 
-#include "timer_manager.h"
+#include "timer_service.h"
 #include <stdio.h>
 #include <unistd.h>
 #include "beam/auto_lock.h"
@@ -9,15 +9,15 @@
 #include "timer_worker.h"
 
 using namespace beam;
-TimerManager TimerManager::instance_;
+TimerService TimerService::instance_;
 
-TimerManager::TimerManager() { trigger_ = NULL; }
+TimerService::TimerService() { trigger_ = NULL; }
 
-TimerManager::~TimerManager() {
+TimerService::~TimerService() {
     if (NULL != trigger_) delete trigger_;
 }
 
-Timer* TimerManager::DoAdd(Task& task, void* args, int time, bool once) {
+Timer* TimerService::DoAdd(Task& task, void* args, int time, bool once) {
     AutoLock lock(mutex_);
     if (NULL == trigger_) {
         trigger_ = new TimerTrigger(*this, NULL);
@@ -31,7 +31,7 @@ Timer* TimerManager::DoAdd(Task& task, void* args, int time, bool once) {
     return NULL;
 }
 
-void TimerManager::DoCancel(Timer* timer) {
+void TimerService::DoCancel(Timer* timer) {
     AutoLock lock(mutex_);
     for (auto it = workers_.begin(); it != workers_.end(); ++it) {
         if (it->worker == timer) {
@@ -43,7 +43,7 @@ void TimerManager::DoCancel(Timer* timer) {
     }
 }
 
-void TimerManager::Run(void*) {
+void TimerService::Run(void*) {
     AutoLock lock(mutex_);
     elapsed_time_++;
     TimerInfo info;

@@ -1,7 +1,7 @@
 /* Copyright ©2018 All right reserved, Author: netdigger*/
 
-#ifndef __TIMER_MANAGER_H__
-#define __TIMER_MANAGER_H__
+#ifndef __TIMER_SERVICE_H__
+#define __TIMER_SERVICE_H__
 
 #include <set>
 #include "beam/mutex.h"
@@ -11,16 +11,16 @@ namespace beam {
 class Timer;
 class TimerWorker;
 class TimerTrigger;
-class TimerManager : public Task {
+class TimerService : public Task {
    public:
-    virtual ~TimerManager();
+    virtual ~TimerService();
     static Timer* Add(Task& task, void* args, int time, bool once) {
         return instance_.DoAdd(task, args, time, once);
     };
     static void Cancel(Timer* timer) { instance_.DoCancel(timer); }
 
    private:
-    static TimerManager instance_;
+    static TimerService instance_;
     struct TimerInfo {
         TimerWorker* worker;
         int circle_time;
@@ -39,7 +39,7 @@ class TimerManager : public Task {
     Mutex mutex_;
     std::set<TimerInfo> workers_;
 
-    TimerManager();
+    TimerService();
     Timer* DoAdd(Task&, void*, int, bool);
     void DoCancel(Timer*);
     void Run(void*);
