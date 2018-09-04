@@ -12,3 +12,5 @@ Timer* Timer::DoOnce(Task& task, void* args, int time) {
 Timer* Timer::DoRepeat(Task& task, void* args, int time) {
     return TimerManager::Add(task, args, time, true);
 }
+
+void Timer::Cancel(Timer* timer) { TimerManager::Cancel(timer); }

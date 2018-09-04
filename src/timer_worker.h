@@ -18,11 +18,7 @@ class TimerWorker : public Timer, public Task {
 
     Status Schedule();
     Status GetStatus() { return status_; };
-
-    // Timer
     int Cancel();
-    // Task
-    void Run(void*);
 
    private:
     Mutex mutex_;
@@ -31,6 +27,9 @@ class TimerWorker : public Timer, public Task {
     Thread* thread_;
     Status status_;
     bool run_once_;
+
+    // Task
+    void Run(void*);
 };
 }  // namespace beam
 #endif

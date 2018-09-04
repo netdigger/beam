@@ -8,10 +8,9 @@ class Timer {
    public:
     virtual ~Timer(){};
 
-    virtual int Cancel() = 0;
-
     static Timer* DoOnce(Task&, void*, int);
     static Timer* DoRepeat(Task&, void*, int);
+    static void Cancel(Timer*);
 };
 }  // namespace beam
 #endif
