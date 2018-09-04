@@ -12,7 +12,7 @@ class Thread;
 class TimerWorker : public Timer, public Task {
    public:
     TimerWorker(Task&, void*, bool);
-    virtual ~TimerWorker(){};
+    virtual ~TimerWorker();
 
     enum Status { kWaiting = 1, kRunning, kCancelled };
 

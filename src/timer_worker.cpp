@@ -1,6 +1,7 @@
 /* Copyright ©2018 All right reserved, Author: netdigger*/
 
 #include "timer_worker.h"
+#include <stdio.h>
 #include "beam/auto_lock.h"
 #include "beam/thread.h"
 using namespace beam;
@@ -8,13 +9,18 @@ using namespace beam;
 TimerWorker::TimerWorker(Task& task, void* args, bool once)
     : task_(task), args_(args), run_once_(once) {
     status_ = kWaiting;
+    thread_ = NULL;
+}
+
+TimerWorker::~TimerWorker() {
+    if (thread_ != NULL) thread_->Stop();
 }
 
 TimerWorker::Status TimerWorker::Schedule() {
     AutoLock lock(mutex_);
     if (kCancelled == status_) return kCancelled;
     status_ = kRunning;
-    thread_ = Thread::Start(task_, args_);
+    thread_ = Thread::Start(*this, args_);
     return status_;
 }
 

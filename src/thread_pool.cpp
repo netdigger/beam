@@ -25,7 +25,7 @@ Thread* ThreadPool::DoSchedule(Task& task, void* arg) {
     WorkerThread* thread = NULL;
 
     mutex_.Lock();
-    while (!idles_.empty()) {
+    while (!idles_.empty() && thread == NULL) {
         thread = idles_.top();
         idles_.pop();
         // If thread was canceled, it should be cleared

@@ -30,13 +30,26 @@ TEST_F(ThreadPoolTest, ScheduleSequence) {
 
 TEST_F(ThreadPoolTest, ScheduleParalleles) {
     EXPECT_CALL(task_, Run(&wait_time_))
-        .Times(2)
+        .Times(4)
+        .WillOnce(Invoke(&task_, &MockTask::Wait))
+        .WillOnce(testing::Return())
         .WillOnce(Invoke(&task_, &MockTask::Wait))
         .WillOnce(testing::Return());
 
     Thread* thread_1 = ThreadPool::Schedule(task_, &wait_time_);
     Thread* thread_2 = ThreadPool::Schedule(task_, &wait_time_);
     EXPECT_FALSE(thread_1 == thread_2);
+    thread_1->Join();
+    thread_2->Join();
+
+    Thread* thread_3 = ThreadPool::Schedule(task_, &wait_time_);
+    Thread* thread_4 = ThreadPool::Schedule(task_, &wait_time_);
+    if (thread_3 == thread_1) {
+        EXPECT_EQ(thread_4, thread_2);
+    } else {
+        EXPECT_EQ(thread_4, thread_1);
+        EXPECT_EQ(thread_3, thread_2);
+    }
     thread_1->Join();
     thread_2->Join();
 }
