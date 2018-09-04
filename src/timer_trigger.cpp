@@ -6,7 +6,12 @@
 #include "beam/thread.h"
 
 using namespace beam;
-TimerTrigger::TimerTrigger(Task& task, void* args) : task_(task), args_(args) {
+
+TimerTrigger TimerTrigger::instance_;
+void TimerTrigger::DoStart(Task& task, void* args) {
+    task_ = &task;
+    args_ = args;
+    run_ = true;
     // Blocking signal must be done in main thread
     sigset_t sigset;
     ::sigemptyset(&sigset);
@@ -22,9 +27,8 @@ TimerTrigger::TimerTrigger(Task& task, void* args) : task_(task), args_(args) {
 }
 
 TimerTrigger::~TimerTrigger() {
-    ::timer_delete(timer_id_);
-    thread_->Stop();
-    ::sigprocmask(SIG_SETMASK, &old_sigset_, NULL);
+    run_ = false;
+    thread_->Join();
 }
 
 void TimerTrigger::Run(void*) {
@@ -33,13 +37,18 @@ void TimerTrigger::Run(void*) {
 
     ::sigemptyset(&sigset);
     ::sigaddset(&sigset, SIGRTMIN);
-    while (true) {
+    // Note: The task maybe want to stop the trigger in task run function.
+    // So whe just set run_ to false in stop function.
+    while (run_) {
         if (::sigwait(&sigset, &signum) != 0) {
             ::perror("sigwait faile");
             continue;
         }
-        task_.Run(args_);
+        task_->Run(args_);
     }
+
+    ::timer_delete(timer_id_);
+    ::sigprocmask(SIG_SETMASK, &old_sigset_, NULL);
 }
 
 int TimerTrigger::init() {

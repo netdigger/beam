@@ -25,6 +25,7 @@ Thread* ThreadPool::DoSchedule(Task& task, void* arg) {
     WorkerThread* thread = NULL;
 
     mutex_.Lock();
+    // Get a idle thread from WorkThread stack to reuse it.
     while (!idles_.empty() && thread == NULL) {
         thread = idles_.top();
         idles_.pop();

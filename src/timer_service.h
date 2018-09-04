@@ -13,7 +13,7 @@ class TimerWorker;
 class TimerTrigger;
 class TimerService : public Task {
    public:
-    virtual ~TimerService();
+    virtual ~TimerService(){};
     static Timer* Add(Task& task, void* args, int time, bool once) {
         return instance_.DoAdd(task, args, time, once);
     };
@@ -34,12 +34,12 @@ class TimerService : public Task {
     };
 
     int elapsed_time_;
-    TimerTrigger* trigger_;
 
     Mutex mutex_;
     std::set<TimerInfo> workers_;
 
-    TimerService();
+    TimerService(){};
+    TimerService(TimerService&){};
     Timer* DoAdd(Task&, void*, int, bool);
     void DoCancel(Timer*);
     void Run(void*);

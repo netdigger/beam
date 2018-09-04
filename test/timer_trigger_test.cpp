@@ -10,15 +10,15 @@ using namespace testing;
 
 class TimerTriggerTest : public testing::Test {
    public:
-    void SetUp() { trigger_ = new TimerTrigger(task_, &wait_time_); };
-    void TearDown() { delete trigger_; };
+    void SetUp(){};
+    void TearDown(){};
 
     int wait_time_ = 10;
-    TimerTrigger* trigger_;
     MockTask task_;
 };
 
 TEST_F(TimerTriggerTest, Schedule) {
+    TimerTrigger::Start(task_, &wait_time_);
     EXPECT_CALL(task_, Run(&wait_time_)).Times(Between(9, 11));
     Wait(10);
 }

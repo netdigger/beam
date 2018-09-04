@@ -11,16 +11,10 @@
 using namespace beam;
 TimerService TimerService::instance_;
 
-TimerService::TimerService() { trigger_ = NULL; }
-
-TimerService::~TimerService() {
-    if (NULL != trigger_) delete trigger_;
-}
-
 Timer* TimerService::DoAdd(Task& task, void* args, int time, bool once) {
     AutoLock lock(mutex_);
-    if (NULL == trigger_) {
-        trigger_ = new TimerTrigger(*this, NULL);
+    if (workers_.size() == 0) {
+        TimerTrigger::Start(*this, NULL);
         elapsed_time_ = 0;
     }
 
@@ -66,7 +60,6 @@ void TimerService::Run(void*) {
     }
 
     if (workers_.empty()) {
-        delete trigger_;
-        trigger_ = NULL;
+        TimerTrigger::Stop();
     }
 }
