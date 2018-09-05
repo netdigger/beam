@@ -29,6 +29,7 @@ void TimerTrigger::DoStart(Task& task, void* args) {
 TimerTrigger::~TimerTrigger() {
     run_ = false;
     thread_->Join();
+    ::printf("TimerTrigger deconstructure\n");
 }
 
 void TimerTrigger::Run(void*) {
@@ -44,7 +45,7 @@ void TimerTrigger::Run(void*) {
             ::perror("sigwait faile");
             continue;
         }
-        task_->Run(args_);
+        if (run_) task_->Run(args_);
     }
 
     ::timer_delete(timer_id_);

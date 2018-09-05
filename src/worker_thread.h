@@ -13,6 +13,7 @@ class WorkerThread : public Thread {
    public:
     WorkerThread(ThreadObserver*);
     ~WorkerThread();
+    bool operator==(const Thread&) const;
 
     int Schedule(Task&, void*);
     int Stop();

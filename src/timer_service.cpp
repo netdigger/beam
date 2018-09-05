@@ -59,6 +59,7 @@ void TimerService::Run(void*) {
             break;
     }
 
+    // Be careful in trigger's task stop trigger.
     if (workers_.empty()) {
         TimerTrigger::Stop();
     }

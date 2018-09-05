@@ -18,6 +18,12 @@ WorkerThread::~WorkerThread() {
     ::pthread_join(thread_, NULL);
 }
 
+bool WorkerThread::operator==(const Thread& thread) const {
+    auto t = dynamic_cast<const WorkerThread*>(&thread);
+    if (NULL == t) return (t->thread_ == thread_);
+    return false;
+}
+
 int WorkerThread::Stop() {
     if (idle_ || canceled_) return 0;
     ::pthread_cancel(thread_);
