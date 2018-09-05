@@ -20,7 +20,7 @@ WorkerThread::~WorkerThread() {
 
 bool WorkerThread::operator==(const Thread& thread) const {
     auto t = dynamic_cast<const WorkerThread*>(&thread);
-    if (NULL == t) return (t->thread_ == thread_);
+    if (NULL != t) return (t->thread_ == thread_);
     return false;
 }
 

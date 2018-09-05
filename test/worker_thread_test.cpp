@@ -9,7 +9,7 @@
 using namespace beam;
 using testing::Invoke;
 
-class WorkThreadTest : public testing::Test {
+class WorkerThreadTest : public testing::Test {
    public:
     void SetUp() { thread_ = new WorkerThread(&ob_); };
     void TearDown() { delete thread_; };
@@ -20,7 +20,16 @@ class WorkThreadTest : public testing::Test {
     MockThreadObserver ob_;
 };
 
-TEST_F(WorkThreadTest, Schedule) {
+TEST_F(WorkerThreadTest, OperatorEqual) {
+    WorkerThread thread(&ob_);
+
+    EXPECT_TRUE(*thread_ == *thread_);
+    EXPECT_FALSE(*thread_ == thread);
+    EXPECT_TRUE(thread == thread);
+    EXPECT_FALSE(thread == *thread_);
+}
+
+TEST_F(WorkerThreadTest, Schedule) {
     EXPECT_CALL(task_, Run(&wait_time_)).Times(2);
     EXPECT_CALL(ob_, OnFinished(thread_)).Times(2);
 
@@ -30,7 +39,7 @@ TEST_F(WorkThreadTest, Schedule) {
     thread_->Join();
 }
 
-TEST_F(WorkThreadTest, Cancel) {
+TEST_F(WorkerThreadTest, Cancel) {
     EXPECT_CALL(task_, Run(&wait_time_))
         .Times(1)
         .WillOnce(Invoke(&task_, &MockTask::Wait));
@@ -41,7 +50,7 @@ TEST_F(WorkThreadTest, Cancel) {
     thread_->Stop();
 }
 
-TEST_F(WorkThreadTest, Join) {
+TEST_F(WorkerThreadTest, Join) {
     EXPECT_CALL(task_, Run(&wait_time_))
         .Times(1)
         .WillOnce(Invoke(&task_, &MockTask::Wait));
