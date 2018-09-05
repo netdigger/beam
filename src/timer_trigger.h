@@ -3,6 +3,7 @@
 #ifndef __TIMER_TRIGGER_H__
 #define __TIMER_TRIGGER_H__
 #include <beam/task.h>
+#include <pthread.h>
 #include <signal.h>
 #include <time.h>
 
@@ -15,7 +16,7 @@ class TimerTrigger : public Task {
     static void Start(Task& task, void* args) {
         instance_.DoStart(task, args);
     };
-    static void Stop() { instance_.run_ = false; };
+    static void Stop() { instance_.DoStop(); };
 
    private:
     static TimerTrigger instance_;
@@ -25,15 +26,18 @@ class TimerTrigger : public Task {
 
     bool run_;
     timer_t timer_id_;
+    pthread_t thread_id_;
     sigset_t old_sigset_;
     struct sigevent sigevent_;
     struct itimerspec itime_;
 
-    TimerTrigger(){};
+    TimerTrigger();
     TimerTrigger(TimerTrigger&){};
     void DoStart(Task&, void*);
+    void DoStop();
     void Run(void*);
     int init();
+    static void HandleSignal(int){};
 };
 }  // namespace beam
 #endif

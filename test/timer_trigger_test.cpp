@@ -17,8 +17,22 @@ class TimerTriggerTest : public testing::Test {
     MockTask task_;
 };
 
-TEST_F(TimerTriggerTest, Schedule) {
+TEST_F(TimerTriggerTest, StartAndStop) {
     TimerTrigger::Start(task_, &wait_time_);
     EXPECT_CALL(task_, Run(&wait_time_)).Times(Between(9, 11));
     Wait(10);
+    TimerTrigger::Stop();
+}
+
+TEST_F(TimerTriggerTest, StartAndStopMultiple) {
+    TimerTrigger::Start(task_, &wait_time_);
+    EXPECT_CALL(task_, Run(&wait_time_)).Times(Between(9, 11));
+    Wait(10);
+    TimerTrigger::Stop();
+
+    MockTask task;
+    TimerTrigger::Start(task, &wait_time_);
+    EXPECT_CALL(task, Run(&wait_time_)).Times(Between(9, 11));
+    Wait(10);
+    TimerTrigger::Stop();
 }

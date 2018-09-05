@@ -8,6 +8,14 @@
 using namespace beam;
 
 TimerTrigger TimerTrigger::instance_;
+
+TimerTrigger::TimerTrigger() { ::signal(SIGRTMIN, HandleSignal); }
+
+TimerTrigger::~TimerTrigger() {
+    run_ = false;
+    if (NULL != thread_) thread_->Stop();
+}
+
 void TimerTrigger::DoStart(Task& task, void* args) {
     task_ = &task;
     args_ = args;
@@ -26,13 +34,17 @@ void TimerTrigger::DoStart(Task& task, void* args) {
     }
 }
 
-TimerTrigger::~TimerTrigger() {
+void TimerTrigger::DoStop() {
+    if (NULL == thread_) return;
     run_ = false;
+    pthread_t id = ::pthread_self();
+    if (id == thread_id_) return;
+    ::raise(SIGRTMIN);
     thread_->Join();
-    ::printf("TimerTrigger deconstructure\n");
 }
 
 void TimerTrigger::Run(void*) {
+    thread_id_ = ::pthread_self();
     sigset_t sigset;
     int signum;
 
