@@ -9,7 +9,11 @@ using namespace beam;
 
 TimerTrigger TimerTrigger::instance_;
 
-TimerTrigger::TimerTrigger() { ::signal(SIGRTMIN, HandleSignal); }
+TimerTrigger::TimerTrigger() {
+    // Use semaphore to avoid starting trigger twice at same time.
+    sem_.Post();
+    ::signal(SIGRTMIN, HandleSignal);
+}
 
 TimerTrigger::~TimerTrigger() {
     run_ = false;
@@ -17,6 +21,7 @@ TimerTrigger::~TimerTrigger() {
 }
 
 void TimerTrigger::DoStart(Task& task, void* args) {
+    sem_.Wait();
     task_ = &task;
     args_ = args;
     run_ = true;
@@ -34,14 +39,7 @@ void TimerTrigger::DoStart(Task& task, void* args) {
     }
 }
 
-void TimerTrigger::DoStop() {
-    if (NULL == thread_) return;
-    run_ = false;
-    pthread_t id = ::pthread_self();
-    if (id == thread_id_) return;
-    ::raise(SIGRTMIN);
-    thread_->Join();
-}
+void TimerTrigger::DoStop() { run_ = false; }
 
 void TimerTrigger::Run(void*) {
     thread_id_ = ::pthread_self();
@@ -62,6 +60,7 @@ void TimerTrigger::Run(void*) {
 
     ::timer_delete(timer_id_);
     ::sigprocmask(SIG_SETMASK, &old_sigset_, NULL);
+    sem_.Post();
 }
 
 int TimerTrigger::init() {

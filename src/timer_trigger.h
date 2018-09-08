@@ -2,10 +2,11 @@
 
 #ifndef __TIMER_TRIGGER_H__
 #define __TIMER_TRIGGER_H__
-#include <beam/task.h>
 #include <pthread.h>
 #include <signal.h>
 #include <time.h>
+#include "beam/semaphore.h"
+#include "beam/task.h"
 
 namespace beam {
 class Task;
@@ -30,6 +31,7 @@ class TimerTrigger : public Task {
     sigset_t old_sigset_;
     struct sigevent sigevent_;
     struct itimerspec itime_;
+    Semaphore sem_;
 
     TimerTrigger();
     TimerTrigger(TimerTrigger&){};

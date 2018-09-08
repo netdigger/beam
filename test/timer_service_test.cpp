@@ -26,9 +26,10 @@ TEST_F(TimerServiceTest, AddOnce) {
 }
 
 TEST_F(TimerServiceTest, Repeat) {
-    TimerService::Add(task_, &wait_time_, 2, false);
+    Timer* timer = TimerService::Add(task_, &wait_time_, 2, false);
     EXPECT_CALL(task_, Run(&wait_time_)).Times(Between(2, 3));
     Wait(5);
+    TimerService::Cancel(timer);
 }
 
 TEST_F(TimerServiceTest, AddOnceMultiple) {
@@ -40,11 +41,13 @@ TEST_F(TimerServiceTest, AddOnceMultiple) {
 
 TEST_F(TimerServiceTest, RepeatMultiple) {
     MockTask task;
-    TimerService::Add(task_, &wait_time_, 2, false);
-    TimerService::Add(task, &wait_time_, 1, false);
+    Timer* timer_1 = TimerService::Add(task_, &wait_time_, 2, false);
+    Timer* timer_2 = TimerService::Add(task, &wait_time_, 1, false);
     EXPECT_CALL(task_, Run(&wait_time_)).Times(Between(2, 3));
     EXPECT_CALL(task, Run(&wait_time_)).Times(Between(4, 5));
     Wait(5);
+    TimerService::Cancel(timer_1);
+    TimerService::Cancel(timer_2);
 }
 
 TEST_F(TimerServiceTest, CancelRepeated) {

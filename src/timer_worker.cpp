@@ -18,14 +18,19 @@ TimerWorker::~TimerWorker() {
 
 TimerWorker::Status TimerWorker::Schedule() {
     AutoLock lock(mutex_);
-    if (kCancelled == status_) return kCancelled;
+    if (status_ != kWaiting) {
+        ::printf("warning: %p is not in waiting %d ", this, status_);
+        return status_;
+    }
     status_ = kRunning;
     thread_ = Thread::Start(*this, args_);
     return status_;
 }
 
 void TimerWorker::Run(void* args) {
+    ::printf("%p start running...\n", this);
     task_.Run(args);
+    ::printf("%p task finished.\n", this);
     mutex_.Lock();
     if (run_once_)
         status_ = kCancelled;
@@ -38,5 +43,6 @@ int TimerWorker::Cancel() {
     AutoLock lock(mutex_);
     status_ = kCancelled;
     if (kRunning == status_) return thread_->Stop();
+    thread_ = NULL;
     return 0;
 }

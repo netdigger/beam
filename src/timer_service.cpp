@@ -12,6 +12,7 @@ using namespace beam;
 TimerService TimerService::instance_;
 
 Timer* TimerService::DoAdd(Task& task, void* args, int time, bool once) {
+    ::printf(" Add task....");
     AutoLock lock(mutex_);
     if (workers_.size() == 0) {
         TimerTrigger::Start(*this, NULL);
@@ -22,45 +23,56 @@ Timer* TimerService::DoAdd(Task& task, void* args, int time, bool once) {
     TimerWorker* timer = new TimerWorker(task, args, once);
     TimerInfo info = {timer, time, time + elapsed_time_};
     workers_.insert(info);
-    return NULL;
+    ::printf(" %p added.\n", timer);
+    return timer;
 }
 
 void TimerService::DoCancel(Timer* timer) {
+    ::printf("Do cancel: %p\n", timer);
     AutoLock lock(mutex_);
     for (auto it = workers_.begin(); it != workers_.end(); ++it) {
+        ::printf("search: woker timer %p\n", it->worker);
         if (it->worker == timer) {
+            ::printf("cancel: woker timer %p... ", it->worker);
             it->worker->Cancel();
+            ::printf("finished\n");
             delete it->worker;
             workers_.erase(it);
-            return;
+            break;
         }
     }
+    ::printf("Do cancel: %p finished \n", timer);
 }
 
 void TimerService::Run(void*) {
     AutoLock lock(mutex_);
     elapsed_time_++;
+    ::printf("elapsed time is %d start \n", elapsed_time_);
     TimerInfo info;
     auto it = workers_.begin();
     while (it != workers_.end()) {
-        if (it->worker->GetStatus() == TimerWorker::kCancelled) {
-            delete it->worker;
-            it = workers_.erase(it);
-            continue;
-        }
-
-        if (elapsed_time_ >= it->trigger_time) {
-            it->worker->Schedule();
-            info = *it;
+        ::printf("trigger timer is %d, timer is %p\n", it->trigger_time,
+                 it->worker);
+        if (elapsed_time_ < it->trigger_time) break;
+        info = *it;
+        it = workers_.erase(it);
+        if (info.worker->GetStatus() == TimerWorker::kCancelled) {
+            ::printf("delete timer %p ...", info.worker);
+            delete info.worker;
+            ::printf("finished.\n");
+        } else {
+            ::printf("schedule timer %p...", info.worker);
+            info.worker->Schedule();
             info.trigger_time = info.circle_time + elapsed_time_;
-            it = workers_.erase(it);
             workers_.insert(info);
-        } else
-            break;
+            ::printf("finished\n");
+        }
     }
 
     // Be careful in trigger's task stop trigger.
     if (workers_.empty()) {
         TimerTrigger::Stop();
+        elapsed_time_ = 0;
     }
+    ::printf("elapsed time %d finished\n", elapsed_time_);
 }
