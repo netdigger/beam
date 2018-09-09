@@ -41,37 +41,43 @@ void TimerService::DoCancel(Timer* timer) {
             break;
         }
     }
-    ::printf("Do cancel: %p finished \n", timer);
+    ::printf("Do cancel: %p finished, %lu \n", timer, workers_.size());
 }
 
 void TimerService::Run(void*) {
+    ::printf("start run: ");
     AutoLock lock(mutex_);
     elapsed_time_++;
     ::printf("elapsed time is %d start \n", elapsed_time_);
     TimerInfo info;
     auto it = workers_.begin();
-    while (it != workers_.end()) {
-        ::printf("trigger timer is %d, timer is %p\n", it->trigger_time,
+    while (it != workers_.end() && elapsed_time_ >= it->trigger_time) {
+        ::printf("trigger timer is %d, timer is %p:", it->trigger_time,
                  it->worker);
-        if (elapsed_time_ < it->trigger_time) break;
+        if (it->worker->GetStatus() == TimerWorker::kRunning) {
+            ::printf(" is running\n");
+            ++it;
+            continue;
+        }
         info = *it;
         it = workers_.erase(it);
         if (info.worker->GetStatus() == TimerWorker::kCancelled) {
-            ::printf("delete timer %p ...", info.worker);
             delete info.worker;
-            ::printf("finished.\n");
+            ::printf(" deleted.\n");
         } else {
-            ::printf("schedule timer %p...", info.worker);
             info.worker->Schedule();
             info.trigger_time = info.circle_time + elapsed_time_;
             workers_.insert(info);
-            ::printf("finished\n");
+            ::printf(" Scheduled. \n");
         }
     }
 
     // Be careful in trigger's task stop trigger.
     if (workers_.empty()) {
+        ::printf("elapsed time %d works is empty, stop trigger...",
+                 elapsed_time_);
         TimerTrigger::Stop();
+        ::printf("finished\n");
         elapsed_time_ = 0;
     }
     ::printf("elapsed time %d finished\n", elapsed_time_);

@@ -2,7 +2,6 @@
 
 #include "timer_worker.h"
 #include <stdio.h>
-#include "beam/auto_lock.h"
 #include "beam/thread.h"
 using namespace beam;
 
@@ -17,13 +16,10 @@ TimerWorker::~TimerWorker() {
 }
 
 TimerWorker::Status TimerWorker::Schedule() {
-    AutoLock lock(mutex_);
-    if (status_ != kWaiting) {
-        ::printf("warning: %p is not in waiting %d ", this, status_);
-        return status_;
-    }
+    mutex_.Lock();
     status_ = kRunning;
     thread_ = Thread::Start(*this, args_);
+    mutex_.Unlock();
     return status_;
 }
 
@@ -40,9 +36,12 @@ void TimerWorker::Run(void* args) {
 }
 
 int TimerWorker::Cancel() {
-    AutoLock lock(mutex_);
+    ::printf("%p canceling...", this);
+    mutex_.Lock();
     status_ = kCancelled;
-    if (kRunning == status_) return thread_->Stop();
+    if (kRunning == status_) thread_->Stop();
     thread_ = NULL;
+    ::printf("finished.\n");
+    mutex_.Unlock();
     return 0;
 }

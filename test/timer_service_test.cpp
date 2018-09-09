@@ -16,16 +16,19 @@ class TimerServiceTest : public testing::Test {
 
     int wait_time_ = 5;
     int cycle_time = 2;
-    MockTask task_;
 };
 
 TEST_F(TimerServiceTest, AddOnce) {
-    TimerService::Add(task_, &wait_time_, 1, true);
-    EXPECT_CALL(task_, Run(&wait_time_)).Times(1);
-    Wait(4);
+    MockTask task;
+    Timer* timer = TimerService::Add(task, &wait_time_, 1, true);
+    EXPECT_CALL(task, Run(&wait_time_)).Times(1);
+    ::Wait(5);
+    // if test fail, the timer must be canceled.
+    TimerService::Cancel(timer);
 }
 
 TEST_F(TimerServiceTest, Repeat) {
+    MockTask task_;
     Timer* timer = TimerService::Add(task_, &wait_time_, 2, false);
     EXPECT_CALL(task_, Run(&wait_time_)).Times(Between(2, 3));
     Wait(5);
@@ -33,6 +36,7 @@ TEST_F(TimerServiceTest, Repeat) {
 }
 
 TEST_F(TimerServiceTest, AddOnceMultiple) {
+    MockTask task_;
     TimerService::Add(task_, &wait_time_, 2, true);
     TimerService::Add(task_, &wait_time_, 1, true);
     EXPECT_CALL(task_, Run(&wait_time_)).Times(2);
@@ -41,6 +45,7 @@ TEST_F(TimerServiceTest, AddOnceMultiple) {
 
 TEST_F(TimerServiceTest, RepeatMultiple) {
     MockTask task;
+    MockTask task_;
     Timer* timer_1 = TimerService::Add(task_, &wait_time_, 2, false);
     Timer* timer_2 = TimerService::Add(task, &wait_time_, 1, false);
     EXPECT_CALL(task_, Run(&wait_time_)).Times(Between(2, 3));
@@ -51,6 +56,7 @@ TEST_F(TimerServiceTest, RepeatMultiple) {
 }
 
 TEST_F(TimerServiceTest, CancelRepeated) {
+    MockTask task_;
     Timer* timer = TimerService::Add(task_, &wait_time_, 4, false);
     EXPECT_CALL(task_, Run(&wait_time_))
         .Times(1)
